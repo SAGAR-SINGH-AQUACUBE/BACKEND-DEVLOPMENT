@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geolocation API Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+            padding: 0;
+        }
+        .location-data {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Geolocation API Example</h2>
+<p>Click the button to get your current location:</p>
+
+<button onclick="getLocation()">Get Location</button>
+
+<div class="location-data">
+    <p id="status"></p>
+    <p>Latitude: <span id="latitude"></span></p>
+    <p>Longitude: <span id="longitude"></span></p>
+    <p>Altitude: <span id="altitude"></span></p>
+</div>
+
+<!-- Optional: Form to Submit the Data -->
+<form id="locationForm" action="YOUR_GOOGLE_FORM_URL" method="POST" target="_blank">
+    <input type="hidden" name="latitude" id="form-latitude">
+    <input type="hidden" name="longitude" id="form-longitude">
+    <input type="hidden" name="altitude" id="form-altitude">
+    <input type="submit" value="Submit Location" disabled id="submitBtn">
+</form>
+
+<script>
+    function getLocation() {
+        const status = document.getElementById("status");
+
+        if (navigator.geolocation) {
+            status.textContent = "Getting location...";
+            navigator.geolocation.getCurrentPosition(showPosition, showError, { enableHighAccuracy: true });
+        } else {
+            status.textContent = "Geolocation is not supported by this browser.";
+        }
+    }
+
+    function showPosition(position) {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        const altitude = position.coords.altitude !== null ? position.coords.altitude : "Not available";
+
+        document.getElementById("latitude").textContent = latitude;
+        document.getElementById("longitude").textContent = longitude;
+        document.getElementById("altitude").textContent = altitude;
+
+        // Populate hidden form fields with location data
+        document.getElementById("form-latitude").value = latitude;
+        document.getElementById("form-longitude").value = longitude;
+        document.getElementById("form-altitude").value = altitude;
+
+        // Enable submit button after getting location
+        document.getElementById("submitBtn").disabled = false;
+        document.getElementById("status").textContent = "Location retrieved successfully.";
+    }
+
+    function showError(error) {
+        const status = document.getElementById("status");
+
+        switch (error.code) {
+            case error.PERMISSION_DENIED:
+                status.textContent = "User denied the request for Geolocation.";
+                break;
+            case error.POSITION_UNAVAILABLE:
+                status.textContent = "Location information is unavailable.";
+                break;
+            case error.TIMEOUT:
+                status.textContent = "The request to get user location timed out.";
+                break;
+            case error.UNKNOWN_ERROR:
+                status.textContent = "An unknown error occurred.";
+                break;
+        }
+    }
+</script>
+
+</body>
+</html>

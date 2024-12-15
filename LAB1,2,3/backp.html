@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student List</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>List of Students</h1>
+  <ul id="student-list"></ul>
+
+  <script>
+    // This script dynamically fills the student list
+    const students = JSON.parse('<%= JSON.stringify(students) %>');
+    const studentList = document.getElementById('student-list');
+    
+    students.forEach(student => {
+      const listItem = document.createElement('li');
+      listItem.textContent = `Name: ${student.name}, Age: ${student.age}, Email: ${student.email}`;
+      studentList.appendChild(listItem);
+    });
+  </script>
+</body>
+</html>
